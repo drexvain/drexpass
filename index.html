@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drexpass generateur de mdp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1a3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .brand {
+            font-size: 6rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7, #c084fc, #8b5cf6);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            animation: gradientShift 4s ease-in-out infinite, float 6s ease-in-out infinite;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .brand::before {
+            content: 'drexpass';
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(20px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #a855f7;
+            margin-bottom: 10px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.7s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+            animation: slideInFromSides 1s ease-out 0.9s both;
+        }
+
+        @keyframes slideInFromSides {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .panel {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .panel:hover::before {
+            left: 100%;
+        }
+
+        .panel:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #a855f7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+            transition: transform 0.3s ease;
+        }
+
+        .panel:hover .icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(30, 30, 30, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .option:hover {
+            background: rgba(139, 92, 246, 0.15);
+            transform: translateX(5px);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .option label {
+            font-size: 0.9rem;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 400;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #555;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            border-color: #8b5cf6;
+            transform: scale(1.1);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #333;
+            outline: none;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider:hover {
+            background: #444;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.8);
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #a855f7;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #555;
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            transform: scale(1.02);
+        }
+
+        .generate-section {
+            text-align: center;
+            margin: 40px 0;
+            animation: fadeInUp 1s ease-out 1.1s both;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            border: none;
+            padding: 18px 50px;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .results-section {
+            margin-top: 40px;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .password-item {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInPassword 0.6s ease forwards;
+        }
+
+        @keyframes slideInPassword {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .password-text {
+            flex: 1;
+            font-family: 'Inter', monospace;
+            font-size: 1.1rem;
+            background: rgba(30, 30, 30, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            word-break: break-all;
+            position: relative;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .password-text:hover {
+            background: rgba(40, 40, 40, 0.8);
+            border-color: #8b5cf6;
+        }
+
+        .strength-indicator {
+            width: 120px;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+        }
+
+        .strength-weak { background: linear-gradient(45deg, #ef4444, #f87171); width: 25%; }
+        .strength-medium { background: linear-gradient(45deg, #f59e0b, #fbbf24); width: 50%; }
+        .strength-strong { background: linear-gradient(45deg, #10b981, #34d399); width: 75%; }
+        .strength-very-strong { background: linear-gradient(45deg, #8b5cf6, #a855f7); width: 100%; }
+
+        .action-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
+            padding: 10px 15px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: rgba(139, 92, 246, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bulk-btn {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #555;
+            border-radius: 12px;
+            padding: 12px 25px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .bulk-btn:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .hidden-feature {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            font-size: 1.5rem;
+        }
+
+        .hidden-feature:hover {
+            opacity: 1;
+            transform: scale(1.2) rotate(10deg);
+            background: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #8b5cf6;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .brand {
+                font-size: 4rem;
+                letter-spacing: 4px;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        .easter-egg {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 25px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            opacity: 0.1;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .easter-egg:hover {
+            opacity: 0.4;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <button class="easter-egg" onclick="activateEasterEgg()">🔮</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="brand">drexpass</h1>
+            <h2 class="title">generateur de mdp</h2>
+            <p class="subtitle">by drexvainnnnnnnnnnnnnnnnnnnnnnn
+                bon courage pr trv l'easter egg </p>
+        </div>
+
+        <div class="main-grid">
+            <div class="panel">
+                <h2 class="panel-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                    </svg>
+                    options normales
+                </h2>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>longueur</span>
+                        <span id="lengthValue">12</span>
+                    </div>
+                    <input type="range" class="slider" id="length" min="4" max="128" value="12">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>nombre de mots de passe</span>
+                        <span id="countValue">1</span>
+                    </div>
+                    <input type="range" class="slider" id="count" min="1" max="50" value="1">
+                </div>
+
+                <div class="options-grid">
+                    <div class="option" onclick="toggleOption('uppercase')">
+                        <label>majuscules (a-z)</label>
+                        <div class="checkbox checked" id="uppercase"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('lowercase')">
+                        <label>minuscules (a-z)</label>
+                        <div class="checkbox checked" id="lowercase"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('numbers')">
+                        <label>chiffres (0-9)</label>
+                        <div class="checkbox checked" id="numbers"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('symbols')">
+                        <label>symboles (!@#$%)</label>
+                        <div class="checkbox checked" id="symbols"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('similar')">
+                        <label class="tooltip" data-tooltip="évite 0, o, i, l, 1">exclure similaires</label>
+                        <div class="checkbox" id="similar"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('ambiguous')">
+                        <label class="tooltip" data-tooltip="évite {}[]()\/~,;.<>">exclure ambigus</label>
+                        <div class="checkbox" id="ambiguous"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    options2
+                </h2>
+
+                <div class="options-grid">
+                    <div class="option" onclick="toggleOption('pronounceable')">
+                        <label class="tooltip" data-tooltip="mots de passe plus faciles à retenir">prononcable</label>
+                        <div class="checkbox" id="pronounceable"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('norepeat')">
+                        <label class="tooltip" data-tooltip="aucun caractère répété">pas de répétition</label>
+                        <div class="checkbox" id="norepeat"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('mustinclude')">
+                        <label>inclure caractères obligatoires</label>
+                        <div class="checkbox" id="mustinclude"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('exclude')">
+                        <label>exclure caractères spéciaux</label>
+                        <div class="checkbox" id="exclude"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('pattern')">
+                        <label class="tooltip" data-tooltip="ex: cvcv = consonne-voyelle-consonne-voyelle">motif perso</label>
+                        <div class="checkbox" id="pattern"></div>
+                    </div>
+                    <div class="option" onclick="toggleOption('wordlist')">
+                        <label class="tooltip" data-tooltip="combine des mots avec des caractères">basé sur mots</label>
+                        <div class="checkbox" id="wordlist"></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="mustIncludeGroup" style="display: none;">
+                    <label>caractères obligatoires</label>
+                    <input type="text" id="mustIncludeChars" placeholder="ex: @#$">
+                </div>
+
+                <div class="input-group" id="excludeGroup" style="display: none;">
+                    <label>caractères à exclure</label>
+                    <input type="text" id="excludeChars" placeholder="ex: 0o1l">
+                </div>
+
+                <div class="input-group" id="patternGroup" style="display: none;">
+                    <label>motif (c=consonne, v=voyelle, n=nombre, s=symbole)</label>
+                    <input type="text" id="patternInput" placeholder="ex: cvnscv">
+                </div>
+
+                <div class="input-group" id="wordlistGroup" style="display: none;">
+                    <label>nombre de mots</label>
+                    <input type="number" id="wordCount" min="1" max="5" value="2">
+                </div>
+            </div>
+        </div>
+
+        <div class="generate-section">
+            <button class="generate-btn" onclick="generatePasswords()">
+                générer les mots de passe
+            </button>
+        </div>
+
+        <div class="results-section" id="results" style="display: none;">
+            <div class="bulk-actions">
+                <button class="bulk-btn" onclick="copyAllPasswords()">copier tout</button>
+                <button class="bulk-btn" onclick="downloadPasswords()">télécharger .txt</button>
+                <button class="bulk-btn" onclick="downloadPasswordsCSV()">télécharger .csv</button>
+                <button class="bulk-btn" onclick="clearResults()">effacer</button>
+                <button class="bulk-btn" onclick="analyzePasswords()">analyser la sécurité</button>
+            </div>
+            <div id="passwordList"></div>
+        </div>
+    </div>
+
+    <div class="hidden-feature" onclick="showStats()" title="statistiques">
+        📊
+    </div>
+
+    <div class="modal" id="statsModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h3>statistiques de gen</h3>
+            <div id="statsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let generatedPasswords = [];
+        let stats = {
+            totalGenerated: 0,
+            averageStrength: 0,
+            mostUsedLength: 12,
+            sessionStart: Date.now()
+        };
+
+        const consonants = 'bcdfghjklmnpqrstvwxyz';
+        const vowels = 'aeiou';
+        const wordList = ['secure', 'strong', 'power', 'magic', 'cyber', 'digital', 'quantum', 'matrix', 'nexus', 'vertex', 'phoenix', 'shadow', 'crystal', 'thunder', 'lightning', 'storm', 'ocean', 'mountain', 'forest', 'galaxy'];
+
+        function toggleOption(optionId) {
+            const checkbox = document.getElementById(optionId);
+            const isChecked = checkbox.classList.contains('checked');
+            
+            if (isChecked) {
+                checkbox.classList.remove('checked');
+            } else {
+                checkbox.classList.add('checked');
+            }
+
+            if (optionId === 'mustinclude') {
+                document.getElementById('mustIncludeGroup').style.display = 
+                    checkbox.classList.contains('checked') ? 'block' : 'none';
+            }
+            if (optionId === 'exclude') {
+                document.getElementById('excludeGroup').style.display = 
+                    checkbox.classList.contains('checked') ? 'block' : 'none';
+            }
+            if (optionId === 'pattern') {
+                document.getElementById('patternGroup').style.display = 
+                    checkbox.classList.contains('checked') ? 'block' : 'none';
+            }
+            if (optionId === 'wordlist') {
+                document.getElementById('wordlistGroup').style.display = 
+                    checkbox.classList.contains('checked') ? 'block' : 'none';
+            }
+        }
+
+        function updateSliderValue(sliderId, valueId) {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            valueDisplay.textContent = slider.value;
+        }
+
+        function getCharacterSet() {
+            let charset = '';
+            
+            if (document.getElementById('uppercase').classList.contains('checked')) {
+                charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
+            if (document.getElementById('lowercase').classList.contains('checked')) {
+                charset += 'abcdefghijklmnopqrstuvwxyz';
+            }
+            if (document.getElementById('numbers').classList.contains('checked')) {
+                charset += '0123456789';
+            }
+            if (document.getElementById('symbols').classList.contains('checked')) {
+                charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            }
+
+            if (document.getElementById('similar').classList.contains('checked')) {
+                charset = charset.replace(/[0oO1lI]/g, '');
+            }
+            if (document.getElementById('ambiguous').classList.contains('checked')) {
+                charset = charset.replace(/[{}[\]()\/\\~,;.<>]/g, '');
+            }
+            if (document.getElementById('exclude').classList.contains('checked')) {
+                const excludeChars = document.getElementById('excludeChars').value;
+                for (let char of excludeChars) {
+                    charset = charset.replace(new RegExp(char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '');
+                }
+            }
+
+            return charset;
+        }
+
+        function generateRandomPassword(length) {
+            const charset = getCharacterSet();
+            if (!charset) return '';
+
+            let password = '';
+            const mustInclude = document.getElementById('mustinclude').classList.contains('checked') 
+                ? document.getElementById('mustIncludeChars').value : '';
+            
+            if (document.getElementById('pattern').classList.contains('checked')) {
+                return generatePatternPassword();
+            }
+            
+            if (document.getElementById('wordlist').classList.contains('checked')) {
+                return generateWordBasedPassword();
+            }
+
+            if (document.getElementById('pronounceable').classList.contains('checked')) {
+                return generatePronounceablePassword(length);
+            }
+
+            for (let i = 0; i < length; i++) {
+                let char;
+                do {
+                    char = charset[Math.floor(Math.random() * charset.length)];
+                } while (document.getElementById('norepeat').classList.contains('checked') && password.includes(char));
+                
+                password += char;
+            }
+
+            if (mustInclude) {
+                for (let char of mustInclude) {
+                    if (!password.includes(char)) {
+                        const randomIndex = Math.floor(Math.random() * password.length);
+                        password = password.substring(0, randomIndex) + char + password.substring(randomIndex + 1);
+                    }
+                }
+            }
+
+            return password;
+        }
+
+        function generatePatternPassword() {
+            const pattern = document.getElementById('patternInput').value.toLowerCase();
+            let password = '';
+            
+            for (let char of pattern) {
+                switch (char) {
+                    case 'c':
+                        password += consonants[Math.floor(Math.random() * consonants.length)];
+                        break;
+                    case 'v':
+                        password += vowels[Math.floor(Math.random() * vowels.length)];
+                        break;
+                    case 'n':
+                        password += Math.floor(Math.random() * 10);
+                        break;
+                    case 's':
+                        password += '!@#$%^&*'[Math.floor(Math.random() * 8)];
+                        break;
+                    default:
+                        password += char;
+                }
+            }
+            
+            return password;
+        }
+
+        function generateWordBasedPassword() {
+            const wordCount = parseInt(document.getElementById('wordCount').value) || 2;
+            const length = parseInt(document.getElementById('length').value);
+            let password = '';
+            
+            for (let i = 0; i < wordCount; i++) {
+                password += wordList[Math.floor(Math.random() * wordList.length)];
+                if (i < wordCount - 1) {
+                    password += Math.floor(Math.random() * 100);
+                }
+            }
+            
+            while (password.length < length) {
+                password += '!@#$%^&*'[Math.floor(Math.random() * 8)];
+            }
+            
+            return password.substring(0, length);
+        }
+
+        function generatePronounceablePassword(length) {
+            let password = '';
+            let useConsonant = Math.random() > 0.5;
+            
+            while (password.length < length) {
+                if (useConsonant) {
+                    password += consonants[Math.floor(Math.random() * consonants.length)];
+                } else {
+                    password += vowels[Math.floor(Math.random() * vowels.length)];
+                }
+                useConsonant = !useConsonant;
+                
+                if (Math.random() > 0.7 && password.length < length - 1) {
+                    password += Math.floor(Math.random() * 10);
+                }
+            }
+            
+            return password.substring(0, length);
+        }
+
+        function calculateStrength(password) {
+            let score = 0;
+            let feedback = [];
+
+            if (password.length >= 8) score += 25;
+            if (password.length >= 12) score += 25;
+            if (/[a-z]/.test(password)) score += 10;
+            if (/[A-Z]/.test(password)) score += 10;
+            if (/[0-9]/.test(password)) score += 10;
+            if (/[^A-Za-z0-9]/.test(password)) score += 20;
+
+            const uniqueChars = new Set(password).size;
+            if (uniqueChars / password.length > 0.7) score += 10;
+
+            if (score < 30) return { level: 'weak', score };
+            if (score < 60) return { level: 'medium', score };
+            if (score < 90) return { level: 'strong', score };
+            return { level: 'very-strong', score };
+        }
+
+        function generatePasswords() {
+            const length = parseInt(document.getElementById('length').value);
+            const count = parseInt(document.getElementById('count').value);
+            
+            generatedPasswords = [];
+            
+            for (let i = 0; i < count; i++) {
+                const password = generateRandomPassword(length);
+                const strength = calculateStrength(password);
+                generatedPasswords.push({ password, strength });
+            }
+            
+            displayPasswords();
+            updateStats();
+        }
+
+        function displayPasswords() {
+            const container = document.getElementById('passwordList');
+            const resultsSection = document.getElementById('results');
+            
+            container.innerHTML = '';
+            resultsSection.style.display = 'block';
+            
+            generatedPasswords.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'password-item';
+                div.style.animationDelay = (index * 0.1) + 's';
+                
+                div.innerHTML = `
+                    <div class="password-text">${item.password}</div>
+                    <div class="strength-indicator">
+                        <div class="strength-bar strength-${item.strength.level}"></div>
+                    </div>
+                    <button class="action-btn" onclick="copyPassword('${item.password}')">copier</button>
+                    <button class="action-btn" onclick="regeneratePassword(${index})">↻</button>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        function copyPassword(password) {
+            navigator.clipboard.writeText(password).then(() => {
+                showNotification('mot de passe copié !');
+            });
+        }
+
+        function copyAllPasswords() {
+            const allPasswords = generatedPasswords.map(item => item.password).join('\n');
+            navigator.clipboard.writeText(allPasswords).then(() => {
+                showNotification('tous les mots de passe copiés !');
+            });
+        }
+
+        function downloadPasswords() {
+            const content = generatedPasswords.map((item, index) => 
+                `mot de passe ${index + 1}: ${item.password} (force: ${item.strength.level})`
+            ).join('\n');
+            
+            downloadFile(content, 'mots-de-passe.txt', 'text/plain');
+        }
+
+        function downloadPasswordsCSV() {
+            const content = 'mot de passe,force,score\n' + 
+                generatedPasswords.map(item => 
+                    `"${item.password}","${item.strength.level}","${item.strength.score}"`
+                ).join('\n');
+            
+            downloadFile(content, 'mots-de-passe.csv', 'text/csv');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function regeneratePassword(index) {
+            const length = parseInt(document.getElementById('length').value);
+            const newPassword = generateRandomPassword(length);
+            const strength = calculateStrength(newPassword);
+            
+            generatedPasswords[index] = { password: newPassword, strength };
+            displayPasswords();
+        }
+
+        function clearResults() {
+            document.getElementById('results').style.display = 'none';
+            generatedPasswords = [];
+        }
+
+        function analyzePasswords() {
+            if (generatedPasswords.length === 0) return;
+            
+            const analysis = generatedPasswords.reduce((acc, item) => {
+                acc[item.strength.level] = (acc[item.strength.level] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const total = generatedPasswords.length;
+            let message = 'analyse de sécurité:\n\n';
+            
+            Object.entries(analysis).forEach(([level, count]) => {
+                const percentage = ((count / total) * 100).toFixed(1);
+                message += `${level}: ${count} (${percentage}%)\n`;
+            });
+            
+            alert(message);
+        }
+
+        function showStats() {
+            const modal = document.getElementById('statsModal');
+            const content = document.getElementById('statsContent');
+            
+            const sessionTime = Math.floor((Date.now() - stats.sessionStart) / 1000 / 60);
+            const avgStrength = generatedPasswords.length > 0 
+                ? (generatedPasswords.reduce((sum, item) => sum + item.strength.score, 0) / generatedPasswords.length).toFixed(1)
+                : 0;
+            
+            content.innerHTML = `
+                <p>mots de passe générés: ${stats.totalGenerated}</p>
+                <p>force moyenne: ${avgStrength}/100</p>
+                <p>longueur préférée: ${stats.mostUsedLength}</p>
+                <p>temps de session: ${sessionTime} min</p>
+                <p>dernière génération: ${generatedPasswords.length} mots de passe</p>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('statsModal').style.display = 'none';
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: linear-gradient(45deg, #8b5cf6, #a855f7);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 1000;
+                font-weight: 500;
+                box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+                animation: slideInNotification 0.4s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutNotification 0.4s ease forwards';
+                setTimeout(() => notification.remove(), 400);
+            }, 2500);
+        }
+
+        function updateStats() {
+            stats.totalGenerated += generatedPasswords.length;
+            stats.mostUsedLength = parseInt(document.getElementById('length').value);
+        }
+
+        function activateEasterEgg() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd'];
+            document.body.style.background = `linear-gradient(45deg, ${colors[Math.floor(Math.random() * colors.length)]}, ${colors[Math.floor(Math.random() * colors.length)]})`;
+            
+            setTimeout(() => {
+                document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1a3a 100%)';
+            }, 3000);
+            
+            showNotification(' easter egg');
+        }
+
+        document.getElementById('length').addEventListener('input', () => updateSliderValue('length', 'lengthValue'));
+        document.getElementById('count').addEventListener('input', () => updateSliderValue('count', 'countValue'));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                generatePasswords();
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('statsModal')) {
+                closeModal();
+            }
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInNotification {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            @keyframes slideOutNotification {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
