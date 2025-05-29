@@ -1,3 +1,5 @@
+
+// c vrm un truc de merde
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -646,7 +648,7 @@
 
                 <div class="slider-container">
                     <div class="slider-label">
-                        <span>nombre de mots de passe</span>
+                        <span>nombre de mots de pass</span>
                         <span id="countValue">1</span>
                     </div>
                     <input type="range" class="slider" id="count" min="1" max="50" value="1">
@@ -685,7 +687,7 @@
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
-                    options2
+                    optio2
                 </h2>
 
                 <div class="options-grid">
@@ -739,7 +741,7 @@
 
         <div class="generate-section">
             <button class="generate-btn" onclick="generatePasswords()">
-                générer les mots de passe
+                gen les mdp
             </button>
         </div>
 
@@ -1015,7 +1017,7 @@
 
         function copyPassword(password) {
             navigator.clipboard.writeText(password).then(() => {
-                showNotification('mot de passe copié !');
+                showNotification('mot de passe copiér !');
             });
         }
 
@@ -1025,7 +1027,7 @@
                 showNotification('tous les mots de passe copiés !');
             });
         }
-
+// qui va aller jusquici meme 1030 lignes c une dinguerie tt ca prrrrrrrrrrrrrrrrrrrrrrrrr 0 stars bggggggggggg
         function downloadPasswords() {
             const content = generatedPasswords.map((item, index) => 
                 `mot de passe ${index + 1}: ${item.password} (force: ${item.strength.level})`
@@ -1096,7 +1098,7 @@
                 : 0;
             
             content.innerHTML = `
-                <p>mots de passe générés: ${stats.totalGenerated}</p>
+                <p>mdp générés: ${stats.totalGenerated}</p>
                 <p>force moyenne: ${avgStrength}/100</p>
                 <p>longueur préférée: ${stats.mostUsedLength}</p>
                 <p>temps de session: ${sessionTime} min</p>
